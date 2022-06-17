@@ -13,7 +13,7 @@ repositories {
 
 dependencies {
     testImplementation 'org.spockframework:spock-core:2.1-groovy-3.0'
-    testImplementation 'org.codehaus.groovy:groovy-all:3.0.10'
+    testImplementation 'org.codehaus.groovy:groovy-all:3.0.11'
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 }

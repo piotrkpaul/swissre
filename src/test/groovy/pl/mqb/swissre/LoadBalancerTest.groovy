@@ -74,4 +74,48 @@ class LoadBalancerTest extends Specification {
         def thirdCall = loadBalancer.get()
         thirdCall == firstCall
     }
+
+    def "it's possible to register 10 provider"() {
+        given:
+        loadBalancer.registerProviders(
+                new DataProvider(), //1
+                new DataProvider(), //2
+                new DataProvider(), //3
+                new DataProvider(), //4
+                new DataProvider(), //5
+                new DataProvider(), //6
+                new DataProvider(), //7
+                new DataProvider(), //8
+                new DataProvider(), //9
+                new DataProvider()  //10
+        )
+
+        when:
+        def firstCall = loadBalancer.get()
+
+        then:
+        firstCall != null
+    }
+
+    def "it's not possible to register over 10 provider - exception is thrown"() {
+        when:
+        loadBalancer.registerProviders(
+                new DataProvider(), //1
+                new DataProvider(), //2
+                new DataProvider(), //3
+                new DataProvider(), //4
+                new DataProvider(), //5
+                new DataProvider(), //6
+                new DataProvider(), //7
+                new DataProvider(), //8
+                new DataProvider(), //9
+                new DataProvider(), //10
+                new DataProvider()  //11
+        )
+
+        then:
+        def e = thrown(IllegalStateException)
+        e.message == "Maximum number of 10 registered Providers has been reached"
+    }
+
 }
