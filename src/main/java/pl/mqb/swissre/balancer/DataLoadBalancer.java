@@ -5,6 +5,7 @@ import pl.mqb.swissre.provider.Provider;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public record DataLoadBalancer(List<Provider> providerList, AtomicInteger latestProvider) implements LoadBalancer {
@@ -40,7 +41,16 @@ public record DataLoadBalancer(List<Provider> providerList, AtomicInteger latest
         return roundRobinProvider;
     }
 
+    private synchronized Provider getRandomProvider() {
+        int randomProviderIndex = new Random().nextInt(providerList.size());
+        return providerList.get(randomProviderIndex);
+    }
+
     public String get() {
         return getProvider().get();
+    }
+
+    public String getFromRandomProvider() {
+        return getRandomProvider().get();
     }
 }

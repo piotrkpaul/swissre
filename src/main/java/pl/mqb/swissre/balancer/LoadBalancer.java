@@ -10,4 +10,6 @@ public interface LoadBalancer {
     boolean removeProvider(Provider provider);
 
     String get();
+
+    String getFromRandomProvider();
 }

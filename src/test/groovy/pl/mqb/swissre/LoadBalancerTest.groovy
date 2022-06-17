@@ -75,6 +75,28 @@ class LoadBalancerTest extends Specification {
         thirdCall == firstCall
     }
 
+    def "load balancer can return value from random provider"() {
+        given:
+        Provider firstProvider = new DataProvider()
+        Provider secondProvider = new DataProvider()
+
+        loadBalancer.registerProvider(firstProvider)
+        loadBalancer.registerProvider(secondProvider)
+
+        when:
+        def firstCall = loadBalancer.getFromRandomProvider()
+
+        then:
+        !firstCall.isBlank()
+        firstCall == firstProvider.get() || firstCall == secondProvider.get()
+
+        then:
+        def secondCall = loadBalancer.get()
+        !secondCall.isBlank()
+        secondCall == firstProvider.get() || secondCall == secondProvider.get()
+    }
+
+
     def "it's possible to register 10 provider"() {
         given:
         loadBalancer.registerProviders(
