@@ -140,4 +140,33 @@ class LoadBalancerTest extends Specification {
         e.message == "Maximum number of 10 registered Providers has been reached"
     }
 
+    def "it's possible to include and exclude"() {
+        given:
+        Provider firstProvider = new DataProvider()
+        Provider secondProvider = new DataProvider()
+
+        loadBalancer.registerProvider(firstProvider)
+        loadBalancer.registerProvider(secondProvider)
+
+        when:
+        def firstCall = loadBalancer.get()
+
+        then:
+        firstCall == firstProvider.get()
+
+        then:
+        def secondCall = loadBalancer.get()
+        secondCall == secondProvider.get()
+
+        when:
+        loadBalancer.removeProvider(firstProvider)
+
+        then: " after removal of first provider, all returned values will come from second one"
+        def firstCallAfterProviderRemoval = loadBalancer.get()
+        firstCallAfterProviderRemoval == secondProvider.get()
+
+        def secondCallAfterProviderRemoval = loadBalancer.get()
+        secondCallAfterProviderRemoval == secondProvider.get()
+    }
+
 }
